@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
   },
   line: {
     position: 'absolute',
-    height: 14,
-    width: 14,
+    height: 3,
+    width: 20,
     borderRadius: 3,
     backgroundColor: '#000',
   },
