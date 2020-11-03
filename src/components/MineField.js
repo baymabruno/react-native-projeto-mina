@@ -8,7 +8,12 @@ export default (props) => {
       return <Field {...field} key={c} />;
     });
 
-    return <View key={r}>{columns}</View>;
+    return (
+      // eslint-disable-next-line react-native/no-inline-styles
+      <View style={{ flexDirection: 'row' }} key={r}>
+        {columns}
+      </View>
+    );
   });
 
   return <View style={styles.container}>{rows}</View>;
@@ -16,7 +21,7 @@ export default (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     backgroundColor: '#eee',
   },
 });
