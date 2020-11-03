@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Alert, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
+import Header from './components/Header';
 import MineField from './components/MineField';
 import {
   cloneBoard,
   createMinedBoard,
+  flagsUsed,
   hadExplosion,
   invertFlag,
   openField,
@@ -57,8 +59,6 @@ export default class App extends Component {
     invertFlag(board, row, column);
     const won = wonGame(board);
 
-    console.log('aki');
-
     if (won) {
       Alert.alert('Ganhou!!!');
     }
@@ -69,11 +69,12 @@ export default class App extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Text>Iniciando o Mines!!!</Text>
-        <Text>
-          Tamanho da grade: {params.getColumnsAmount()} x
-          {params.getRowsAmount()}
-        </Text>
+        <Header
+          flagsLeft={this.minesAmount() - flagsUsed(this.state.board)}
+          onNewGame={() => {
+            this.setState(this.createState());
+          }}
+        />
         <View style={styles.board}>
           <MineField
             board={this.state.board}
