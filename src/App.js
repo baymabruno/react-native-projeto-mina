@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import MineField from './components/MineField';
-import { createMineBoard } from './functions';
+import {
+  cloneBoard,
+  createMinedBoard,
+  hadExplosion,
+  openField,
+  showMines,
+  wonGame,
+} from './functions';
 import params from './params';
 
 export default class App extends Component {
@@ -12,16 +19,36 @@ export default class App extends Component {
 
   minesAmount = () => {
     const cols = params.getColumnsAmount();
-    const rows = params.getRowsAmmount();
-    return Math.ceil(cols * rows * params.difficultLeve);
+    const rows = params.getRowsAmount();
+    return Math.ceil(cols * rows * params.difficultLevel);
   };
 
   createState = () => {
     const cols = params.getColumnsAmount();
-    const rows = params.getRowsAmmount();
+    const rows = params.getRowsAmount();
     return {
-      board: createMineBoard(rows, cols, this.minesAmount),
+      board: createMinedBoard(rows, cols, this.minesAmount()),
+      won: false,
+      lost: false,
     };
+  };
+
+  onOpenField = (row, column) => {
+    const board = cloneBoard(this.state.board);
+    openField(board, row, column);
+    const lost = hadExplosion(board);
+    const won = wonGame(board);
+
+    if (lost) {
+      showMines(board);
+      Alert.alert('Perdeu!!!');
+    }
+
+    if (won) {
+      Alert.alert('Ganhou!!!');
+    }
+
+    this.setState({ board, lost, won });
   };
 
   render() {
@@ -30,10 +57,10 @@ export default class App extends Component {
         <Text>Iniciando o Mines!!!</Text>
         <Text>
           Tamanho da grade: {params.getColumnsAmount()} x
-          {params.getRowsAmmount()}
+          {params.getRowsAmount()}
         </Text>
         <View style={styles.board}>
-          <MineField board={this.state.board} />
+          <MineField board={this.state.board} onOpenField={this.onOpenField} />
         </View>
       </SafeAreaView>
     );
